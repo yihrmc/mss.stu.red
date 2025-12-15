@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://mss.stu.red/project"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://mss.stu.red/project project.xsd">
+    <name></name>
+    <description></description>
+    <groupId></groupId>
+    <artifactId></artifactId>
+    <version></version>
+    <packaging>dependency</packaging>
+
+    <extensions>
+        <extension>
+            <groupId></groupId>
+            <artifactId></artifactId>
+            <version></version>
+        </extension>
+    </extensions>
+
+    <dependencies>
+        <dependency>
+            <groupId></groupId>
+            <artifactId></artifactId>
+            <remove>
+                <extension>
+                    <groupId></groupId>
+                    <artifactId></artifactId>
+                </extension>
+
+                <extension>
+                    <groupId></groupId>
+                    <artifactId></artifactId>
+                </extension>
+
+                <extension>
+                    <groupId></groupId>
+                    <artifactId></artifactId>
+                </extension>
+
+                <dependency>
+                    <groupId></groupId>
+                    <artifactId></artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId></groupId>
+                    <artifactId></artifactId>
+                </dependency>
+            </remove>
+        </dependency>
+    </dependencies>
+</project>
