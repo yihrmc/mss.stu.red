@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindSpaceStudio | 动态网格</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #0a0a0f;
+            color: #fff;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .grid-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .content {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        
+        .title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #8a2be2, #00bfff, #ff0080);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 4s ease infinite;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .grid-line {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .grid-line.horizontal {
+            width: 100%;
+            height: 1px;
+        }
+        
+        .grid-line.vertical {
+            width: 1px;
+            height: 100%;
+        }
+        
+        .grid-point {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .glowing-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.7), transparent);
+            animation: glowMove 3s linear infinite;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+        
+        .pulse {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.8) 0%, transparent 70%);
+            animation: pulseEffect 3s ease-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes glowMove {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw); opacity: 0; }
+        }
+        
+        @keyframes pulseEffect {
+            0% { transform: scale(0.1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.8rem;
+                letter-spacing: 2px;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+                letter-spacing: 1px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container" id="gridContainer"></div>
+    <div class="content">
+        <h1 class="title">MindSpaceStudio</h1>
+        <p class="subtitle">思维空间工作室 · 抽象想法快速转化为具体代码</p>
+    </div>
+    
+    <script>
+        // 网格配置
+        const gridConfig = {
+            horizontalSpacing: 60,
+            verticalSpacing: 60,
+            pointSpacing: 120
+        };
+        
+        // 创建网格线
+        function createGridLines() {
+            const container = document.getElementById('gridContainer');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            // 创建水平线
+            const horizontalCount = Math.ceil(height / gridConfig.horizontalSpacing);
+            for (let i = 0; i <= horizontalCount; i++) {
+                const line = document.createElement('div');
+                line.className = 'grid-line horizontal';
+                line.style.top = `${i * gridConfig.horizontalSpacing}px`;
+                container.appendChild(line);
+            }
+            
+            // 创建垂直线
+            const verticalCount = Math.ceil(width / gridConfig.verticalSpacing);
+            for (let i = 0; i <= verticalCount; i++) {
+                const line = document.createElement('div');
+                line.className = 'grid-line vertical';
+                line.style.left = `${i * gridConfig.verticalSpacing}px`;
+                container.appendChild(line);
+            }
+            
+            // 创建网格点
+            const pointRows = Math.ceil(height / gridConfig.pointSpacing);
+            const pointCols = Math.ceil(width / gridConfig.pointSpacing);
+            
+            for (let row = 0; row <= pointRows; row++) {
+                for (let col = 0; col <= pointCols; col++) {
+                    const point = document.createElement('div');
+                    point.className = 'grid-point';
+                    point.style.left = `${col * gridConfig.pointSpacing}px`;
+                    point.style.top = `${row * gridConfig.pointSpacing}px`;
+                    
+                    // 随机延迟动画
+                    const delay = Math.random() * 2;
+                    point.style.animation = `pulseEffect 3s ease-out ${delay}s infinite`;
+                    
+                    container.appendChild(point);
+                }
+            }
+            
+            // 创建流动光条
+            createGlowingLines();
+            
+            // 创建脉动点
+            createPulsePoints();
+        }
+        
+        // 创建流动光条
+        function createGlowingLines() {
+            const container = document.getElementById('gridContainer');
+            const height = window.innerHeight;
+            
+            // 创建水平流动光条
+            for (let i = 0; i < 5; i++) {
+                const line = document.createElement('div');
+                line.className = 'glowing-line';
+                line.style.top = `${Math.random() * height}px`;
+                line.style.width = `${100 + Math.random() * 200}px`;
+                line.style.height = `${0.5 + Math.random() * 1}px`;
+                line.style.animationDelay = `${Math.random() * 3}s`;
+                
+                // 随机颜色
+                const colors = [
+                    'rgba(138, 43, 226, 0.7)',  // 蓝紫色
+                    'rgba(0, 191, 255, 0.7)',   // 天蓝色
+                    'rgba(255, 0, 128, 0.7)'    // 粉红色
+                ];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                line.style.background = `linear-gradient(90deg, transparent, ${color}, transparent)`;
+                line.style.boxShadow = `0 0 10px ${color}`;
+                
+                container.appendChild(line);
+            }
+        }
+        
+        // 创建脉动点
+        function createPulsePoints() {
+            const container = document.getElementById('gridContainer');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            // 创建随机脉动点
+            for (let i = 0; i < 8; i++) {
+                const pulse = document.createElement('div');
+                pulse.className = 'pulse';
+                pulse.style.left = `${Math.random() * width}px`;
+                pulse.style.top = `${Math.random() * height}px`;
+                
+                // 随机大小和延迟
+                const size = 10 + Math.random() * 30;
+                pulse.style.width = `${size}px`;
+                pulse.style.height = `${size}px`;
+                pulse.style.animationDelay = `${Math.random() * 3}s`;
+                
+                // 随机颜色
+                const colors = [
+                    'radial-gradient(circle, rgba(138, 43, 226, 0.8) 0%, transparent 70%)',
+                    'radial-gradient(circle, rgba(0, 191, 255, 0.8) 0%, transparent 70%)',
+                    'radial-gradient(circle, rgba(255, 0, 128, 0.8) 0%, transparent 70%)'
+                ];
+                pulse.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(pulse);
+            }
+        }
+        
+        // 窗口大小调整时重新创建网格
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                const container = document.getElementById('gridContainer');
+                container.innerHTML = '';
+                createGridLines();
+            }, 250);
+        });
+        
+        // 鼠标移动效果
+        document.addEventListener('mousemove', function(e) {
+            const container = document.getElementById('gridContainer');
+            
+            // 创建跟随鼠标的光点
+            if (Math.random() > 0.7) {
+                const glow = document.createElement('div');
+                glow.style.position = 'absolute';
+                glow.style.width = '2px';
+                glow.style.height = '2px';
+                glow.style.borderRadius = '50%';
+                glow.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                glow.style.boxShadow = '0 0 5px rgba(255, 255, 255, 0.5)';
+                glow.style.left = `${e.clientX}px`;
+                glow.style.top = `${e.clientY}px`;
+                glow.style.pointerEvents = 'none';
+                glow.style.zIndex = '1';
+                
+                container.appendChild(glow);
+                
+                // 淡出并移除
+                setTimeout(() => {
+                    glow.style.transition = 'opacity 0.5s';
+                    glow.style.opacity = '0';
+                    setTimeout(() => {
+                        if (glow.parentNode) {
+                            glow.parentNode.removeChild(glow);
+                        }
+                    }, 500);
+                }, 100);
+            }
+        });
+        
+        // 初始化
+        window.onload = function() {
+            createGridLines();
+            
+            // 定期更新动态元素
+            setInterval(() => {
+                const container = document.getElementById('gridContainer');
+                const glowingLines = container.getElementsByClassName('glowing-line');
+                const pulses = container.getElementsByClassName('pulse');
+                
+                // 更新一些流动光条的位置
+                if (glowingLines.length > 0 && Math.random() > 0.7) {
+                    const line = glowingLines[Math.floor(Math.random() * glowingLines.length)];
+                    line.style.top = `${Math.random() * window.innerHeight}px`;
+                }
+                
+                // 添加新的脉动点
+                if (pulses.length < 15 && Math.random() > 0.8) {
+                    createPulsePoints();
+                }
+                
+                // 清理过多的脉动点
+                if (pulses.length > 20) {
+                    for (let i = 0; i < pulses.length - 15; i++) {
+                        if (pulses[i].parentNode) {
+                            pulses[i].parentNode.removeChild(pulses[i]);
+                        }
+                    }
+                }
+            }, 3000);
+        };
+    </script>
+</body>
+</html>
