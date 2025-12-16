@@ -83,7 +83,7 @@
         .grid-point {
             position: absolute;
             width: 4px;
-            height: 4px;
+            height: px;
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             transform: translate(-50%, -50%);
@@ -105,6 +105,153 @@
             background: radial-gradient(circle, rgba(0, 191, 255, 0.8) 0%, transparent 70%);
             animation: pulseEffect 3s ease-out infinite;
             pointer-events: none;
+        }
+        
+        /* 下载按钮样式 */
+        .download-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(138, 43, 226, 0.6);
+            background: linear-gradient(135deg, #9b42f5, #00c8ff);
+        }
+        
+        .download-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 15px rgba(138, 43, 226, 0.4);
+        }
+        
+        .download-btn i {
+            font-size: 20px;
+        }
+        
+        .download-btn .btn-text {
+            display: inline-block;
+        }
+        
+        /* 下载进度提示 */
+        .download-toast {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            border-left: 4px solid #00bfff;
+        }
+        
+        .download-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .download-toast.success {
+            border-left-color: #4CAF50;
+        }
+        
+        .download-toast.error {
+            border-left-color: #f44336;
+        }
+        
+        /* 配置面板（可选） */
+        .config-panel {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(20, 20, 30, 0.85);
+            border-radius: 8px;
+            padding: 20px;
+            z-index: 1000;
+            width: 300px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        
+        .config-panel.show {
+            display: block;
+        }
+        
+        .config-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #00bfff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .config-close {
+            cursor: pointer;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .config-group {
+            margin-bottom: 15px;
+        }
+        
+        .config-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .config-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .config-input:focus {
+            outline: none;
+            border-color: #00bfff;
+        }
+        
+        .config-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(138, 43, 226, 0.3);
+            color: white;
+            border: 1px solid rgba(138, 43, 226, 0.5);
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .config-btn:hover {
+            background: rgba(138, 43, 226, 0.5);
         }
         
         @keyframes gradientFlow {
@@ -134,6 +281,27 @@
                 font-size: 1.2rem;
                 letter-spacing: 1px;
             }
+            
+            .download-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .download-toast {
+                bottom: 80px;
+                right: 20px;
+                left: 20px;
+                text-align: center;
+            }
+            
+            .config-panel {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                width: auto;
+            }
         }
     </style>
 </head>
@@ -144,6 +312,38 @@
         <p class="subtitle">思维空间工作室 · 抽象想法快速转化为具体代码</p>
     </div>
     
+    <!-- 下载按钮 -->
+    <button class="download-btn" id="downloadBtn">
+        <span class="btn-text">下载示例项目</span>
+    </button>
+    
+    <!-- 下载提示 -->
+    <div class="download-toast" id="downloadToast"></div>
+    
+    <!-- 配置面板（可选，用于修改ZIP文件路径） -->
+    <div class="config-panel" id="configPanel">
+        <div class="config-title">
+            下载配置
+            <span class="config-close" id="closeConfig">&times;</span>
+        </div>
+        <div class="config-group">
+            <label class="config-label">ZIP文件路径/URL:</label>
+            <input type="text" class="config-input" id="zipPathInput" 
+                   value="https://example.com/downloads/mindspace-demo.zip" 
+                   placeholder="请输入ZIP文件的路径或URL">
+            <div class="config-hint" style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 5px;">
+                提示: 您可以修改为本地路径如 "projects/mindspace-demo.zip" 或在线URL
+            </div>
+        </div>
+        <div class="config-group">
+            <label class="config-label">ZIP文件名:</label>
+            <input type="text" class="config-input" id="zipNameInput" 
+                   value="mindspace-demo-project.zip" 
+                   placeholder="请输入下载的文件名">
+        </div>
+        <button class="config-btn" id="saveConfig">保存配置</button>
+    </button>
+    
     <script>
         // 网格配置
         const gridConfig = {
@@ -151,6 +351,116 @@
             verticalSpacing: 60,
             pointSpacing: 120
         };
+        
+        // 下载配置 - 用户可以修改这里的路径
+        let downloadConfig = {
+            // ZIP文件路径 - 请修改为您实际的ZIP文件路径
+            zipFilePath: "./mindspace-demo.zip",
+            // 下载的文件名
+            zipFileName: "mindspace-demo.zip",
+            // 备用路径（如果主路径不可用）
+            fallbackPath: "./mindspace-demo.zip"
+        };
+        
+        // 从localStorage加载保存的配置
+        function loadConfigFromStorage() {
+            const savedConfig = localStorage.getItem('mindspaceDownloadConfig');
+            if (savedConfig) {
+                try {
+                    downloadConfig = JSON.parse(savedConfig);
+                    // 更新输入框的值
+                    document.getElementById('zipPathInput').value = downloadConfig.zipFilePath;
+                    document.getElementById('zipNameInput').value = downloadConfig.zipFileName;
+                } catch (e) {
+                    console.error('Failed to load config:', e);
+                }
+            }
+        }
+        
+        // 保存配置到localStorage
+        function saveConfigToStorage() {
+            try {
+                localStorage.setItem('mindspaceDownloadConfig', JSON.stringify(downloadConfig));
+                showToast('配置已保存', 'success');
+            } catch (e) {
+                console.error('Failed to save config:', e);
+                showToast('配置保存失败', 'error');
+            }
+        }
+        
+        // 显示提示信息
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('downloadToast');
+            toast.textContent = message;
+            toast.className = 'download-toast';
+            toast.classList.add('show', type);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 下载文件函数
+        function downloadFile() {
+            const link = document.createElement('a');
+            link.href = downloadConfig.zipFilePath;
+            link.download = downloadConfig.zipFileName;
+            link.target = '_blank';
+            
+            // 创建点击事件
+            const clickEvent = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true
+            });
+            
+            // 尝试下载
+            try {
+                // 添加到文档并触发点击
+                document.body.appendChild(link);
+                link.dispatchEvent(clickEvent);
+                document.body.removeChild(link);
+                
+                // 显示成功消息
+                showToast('开始下载: ' + downloadConfig.zipFileName, 'success');
+                
+                // 记录下载事件（可用于统计）
+                console.log(`下载触发: ${downloadConfig.zipFilePath}`);
+                
+            } catch (error) {
+                console.error('下载失败:', error);
+                showToast('下载失败，请检查文件路径', 'error');
+                
+                // 尝试备用路径
+                setTimeout(() => {
+                    const fallbackLink = document.createElement('a');
+                    fallbackLink.href = downloadConfig.fallbackPath;
+                    fallbackLink.download = downloadConfig.zipFileName;
+                    fallbackLink.target = '_blank';
+                    
+                    try {
+                        document.body.appendChild(fallbackLink);
+                        fallbackLink.dispatchEvent(clickEvent);
+                        document.body.removeChild(fallbackLink);
+                        showToast('使用备用路径下载', 'success');
+                    } catch (fallbackError) {
+                        console.error('备用路径也失败:', fallbackError);
+                        showToast('无法下载文件，请联系管理员', 'error');
+                    }
+                }, 1000);
+            }
+        }
+        
+        // 模拟服务器下载（如果文件在服务器上）
+        function simulateDownload() {
+            showToast('正在准备下载文件...', 'info');
+            
+            // 模拟网络延迟
+            setTimeout(() => {
+                // 实际下载
+                downloadFile();
+            }, 800);
+        }
         
         // 创建网格线
         function createGridLines() {
@@ -309,6 +619,48 @@
         window.onload = function() {
             createGridLines();
             
+            // 加载保存的配置
+            loadConfigFromStorage();
+            
+            // 下载按钮事件
+            const downloadBtn = document.getElementById('downloadBtn');
+            downloadBtn.addEventListener('click', simulateDownload);
+            
+            // 配置面板相关
+            const configPanel = document.getElementById('configPanel');
+            const closeConfigBtn = document.getElementById('closeConfig');
+            const saveConfigBtn = document.getElementById('saveConfig');
+            const zipPathInput = document.getElementById('zipPathInput');
+            const zipNameInput = document.getElementById('zipNameInput');
+            
+            // 右键点击下载按钮打开配置面板
+            downloadBtn.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                configPanel.classList.add('show');
+            });
+            
+            // 关闭配置面板
+            closeConfigBtn.addEventListener('click', function() {
+                configPanel.classList.remove('show');
+            });
+            
+            // 保存配置
+            saveConfigBtn.addEventListener('click', function() {
+                downloadConfig.zipFilePath = zipPathInput.value.trim();
+                downloadConfig.zipFileName = zipNameInput.value.trim();
+                saveConfigToStorage();
+                configPanel.classList.remove('show');
+            });
+            
+            // 点击面板外部关闭配置
+            document.addEventListener('click', function(e) {
+                if (configPanel.classList.contains('show') && 
+                    !configPanel.contains(e.target) && 
+                    e.target !== downloadBtn) {
+                    configPanel.classList.remove('show');
+                }
+            });
+            
             // 定期更新动态元素
             setInterval(() => {
                 const container = document.getElementById('gridContainer');
@@ -336,6 +688,19 @@
                 }
             }, 3000);
         };
+        
+        // 添加键盘快捷键：Ctrl+Alt+D 触发下载
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.altKey && e.key === 'd') {
+                e.preventDefault();
+                simulateDownload();
+            }
+            
+            // Esc 关闭配置面板
+            if (e.key === 'Escape') {
+                document.getElementById('configPanel').classList.remove('show');
+            }
+        });
     </script>
 </body>
 </html>
