@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindSpaceStudio | 动态网格</title>
+    <title>MindSpaceStudio</title>
     <style>
         * {
             margin: 0;
@@ -62,7 +62,98 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 20px;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 0 auto 30px;
+        }
+        
+        /* 新增联系方式样式 - 科幻炫酷风格 */
+        .contact-section {
+            margin-top: 50px;
+            position: relative;
+            display: inline-block;
+            padding: 25px 40px;
+            background: rgba(20, 20, 30, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(138, 43, 226, 0.5);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        
+        .contact-label {
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .contact-email {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+            color: #00bfff;
+            text-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: all;
+        }
+        
+        .contact-email:hover {
+            color: #8a2be2;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.9);
+            transform: scale(1.05);
+        }
+        
+        /* 扫描线效果 */
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00bfff, #8a2be2, #ff0080, transparent);
+            animation: scanLine 4s linear infinite;
+        }
+        
+        /* 背景脉冲效果 */
+        .contact-bg-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            transform: translate(-50%, -50%);
+            animation: pulseBorder 3s ease-out infinite;
+        }
+        
+        /* 二进制数字装饰 */
+        .binary-code {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            color: rgba(138, 43, 226, 0.2);
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
+        
+        .binary-code.left {
+            top: 50%;
+            left: -80px;
+            transform: rotate(90deg) translateY(-50%);
+            transform-origin: left center;
+        }
+        
+        .binary-code.right {
+            top: 50%;
+            right: -80px;
+            transform: rotate(-90deg) translateY(-50%);
+            transform-origin: right center;
         }
         
         .grid-line {
@@ -83,7 +174,7 @@
         .grid-point {
             position: absolute;
             width: 4px;
-            height: px;
+            height: 4px;
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             transform: translate(-50%, -50%);
@@ -271,6 +362,23 @@
             100% { transform: scale(2); opacity: 0; }
         }
         
+        /* 新增的动画 */
+        @keyframes scanLine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        @keyframes pulseBorder {
+            0% { 
+                transform: translate(-50%, -50%) scale(0.95);
+                opacity: 1;
+            }
+            100% { 
+                transform: translate(-50%, -50%) scale(1.05);
+                opacity: 0;
+            }
+        }
+        
         @media (max-width: 768px) {
             .title {
                 font-size: 2.8rem;
@@ -280,6 +388,19 @@
             .subtitle {
                 font-size: 1.2rem;
                 letter-spacing: 1px;
+            }
+            
+            .contact-section {
+                padding: 20px 30px;
+                margin-top: 30px;
+            }
+            
+            .contact-email {
+                font-size: 1.1rem;
+            }
+            
+            .contact-label {
+                font-size: 0.8rem;
             }
             
             .download-btn {
@@ -310,6 +431,15 @@
     <div class="content">
         <h1 class="title">MindSpaceStudio</h1>
         <p class="subtitle">思维空间工作室 · 抽象想法快速转化为具体代码</p>
+        
+        <!-- 新增联系方式 -->
+        <div class="contact-section">
+            <div class="contact-bg-pulse"></div>
+            <div class="binary-code left">01001001 01001110 01000110 01001111</div>
+            <div class="binary-code right">01000011 01001111 01001110 01010100 01000001 01000011 01010100</div>
+            <div class="contact-label">联系邮箱</div>
+            <div class="contact-email" id="contactEmail" title="点击可复制">yihrmc@qq.com</div>
+        </div>
     </div>
     
     <!-- 下载按钮 -->
@@ -329,7 +459,7 @@
         <div class="config-group">
             <label class="config-label">ZIP文件路径/URL:</label>
             <input type="text" class="config-input" id="zipPathInput" 
-                   value="https://example.com/downloads/mindspace-demo.zip" 
+                   value="https://example.com/downloads/mindspace-demo.zip " 
                    placeholder="请输入ZIP文件的路径或URL">
             <div class="config-hint" style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 5px;">
                 提示: 您可以修改为本地路径如 "projects/mindspace-demo.zip" 或在线URL
@@ -342,7 +472,7 @@
                    placeholder="请输入下载的文件名">
         </div>
         <button class="config-btn" id="saveConfig">保存配置</button>
-    </button>
+    </div>
     
     <script>
         // 网格配置
@@ -625,6 +755,28 @@
             // 下载按钮事件
             const downloadBtn = document.getElementById('downloadBtn');
             downloadBtn.addEventListener('click', simulateDownload);
+            
+            // 新增：联系方式点击复制功能
+            const contactEmail = document.getElementById('contactEmail');
+            contactEmail.addEventListener('click', function() {
+                const email = this.textContent;
+                navigator.clipboard.writeText(email).then(() => {
+                    const originalText = this.textContent;
+                    const originalShadow = this.style.textShadow;
+                    this.textContent = '已复制到剪贴板!';
+                    this.style.textShadow = '0 0 20px #4CAF50';
+                    
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.style.textShadow = originalShadow;
+                    }, 1500);
+                    
+                    showToast('邮箱已复制到剪贴板', 'success');
+                }).catch(err => {
+                    showToast('复制失败，请手动复制', 'error');
+                    console.error('复制失败:', err);
+                });
+            });
             
             // 配置面板相关
             const configPanel = document.getElementById('configPanel');
